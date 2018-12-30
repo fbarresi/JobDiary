@@ -121,7 +121,7 @@ def main(args=sys.argv[1:]):
 
     include_debug_info = '--debug' in args
 
-    if len(args) == 0 :
+    if (len(args) == 0)  | ("--help" in args):
         print(usage())
         return
 
@@ -137,6 +137,6 @@ def main(args=sys.argv[1:]):
         "report": report
     }
 
-    func = commands.get(args[0], lambda x : "Invalid command")
+    func = commands.get(args[0], lambda x : "Invalid command. Use --help for command description")
     print(func(args[1:]))
     return
