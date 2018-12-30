@@ -25,11 +25,11 @@ def decode_args(args, encoding=None):
 
 def can_start(entries):
     starts_and_stops = [e for e in entries if (e['type'] == 'start') | (e['type'] == 'end')]
-    return starts_and_stops % 2 == 0
+    return len(starts_and_stops) % 2 == 0
 
 def can_stop(entries):
     starts_and_stops = [e for e in entries if (e['type'] == 'start') | (e['type'] == 'end')]
-    return starts_and_stops % 2 != 0
+    return len(starts_and_stops) % 2 != 0
 
 def can_change(entries):
     return can_stop(entries)
@@ -91,7 +91,7 @@ def task(args):
     else:
         return bad("no daily entry found")
 
-def day_is_calendar_week(date_string, week_number):
+def date_is_in_calendar_week(date_string, week_number):
     return datetime.datetime.strptime(date_string, "%Y-%m-%d").date().isocalendar()[1] == int(week_number)
 
 def report(args):
@@ -102,7 +102,7 @@ def report(args):
         if "-m" in args:
             target_date = "^"+datetime.datetime.strptime(args[1], "%m.%Y").strftime("%Y-%m")+"*"
         elif "-w" in args:
-            return format_results(db.search(entry.day.test(day_is_calendar_week, args[1])))
+            return format_results(db.search(entry.day.test(date_is_in_calendar_week, args[1])))
         else:
             target_date = datetime.datetime.strptime(args[0], "%d.%m.%Y").strftime("%Y-%m-%d")
     else:
