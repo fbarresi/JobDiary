@@ -93,16 +93,16 @@ def report(args):
     target_date = now.date()
     if len(args) != 0:
         if "-m" in args:
-            target_date = datetime.datetime.strptime(args[0], "%m.%Y").strftime("%Y-%m-%d")
+            target_date = "^"+datetime.datetime.strptime(args[1], "%m.%Y").strftime("%Y-%m")+"*"
         else:
             target_date = datetime.datetime.strptime(args[0], "%d.%m.%Y").strftime("%Y-%m-%d")
     else:
         target_date = now.date()
+    print(target_date)
     entry = Query()
-    results = db.search(entry.day == str(target_date))
+    results = db.search(entry.day.matches(str(target_date)))
     if len(results) > 0:
-        result = results[0]
-        return pp.pformat(result['entries'])
+        return pp.pformat(list(result for result in results))
     else:
         return bad("no entry found")
 
