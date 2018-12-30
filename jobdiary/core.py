@@ -88,18 +88,27 @@ def task(args):
     else:
         return bad("no daily entry found")
 
+def day_is_calendar_week(date_string, week_number):
+    return datetime.datetime.strptime(date_string, "%Y-%m-%d").date().isocalendar()[1] == int(week_number)
+
 def report(args):
     now = datetime.datetime.now()
     target_date = now.date()
+    entry = Query()
     if len(args) != 0:
         if "-m" in args:
             target_date = "^"+datetime.datetime.strptime(args[1], "%m.%Y").strftime("%Y-%m")+"*"
+        elif "-w" in args:
+            results = db.search(entry.day.test(day_is_calendar_week, args[1]))
+            if len(results) > 0:
+                return pp.pformat(list(result for result in results))
+            else:
+                return bad("no entry found")
         else:
             target_date = datetime.datetime.strptime(args[0], "%d.%m.%Y").strftime("%Y-%m-%d")
     else:
         target_date = now.date()
-    print(target_date)
-    entry = Query()
+
     results = db.search(entry.day.matches(str(target_date)))
     if len(results) > 0:
         return pp.pformat(list(result for result in results))
