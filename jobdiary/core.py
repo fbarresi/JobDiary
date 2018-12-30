@@ -23,15 +23,24 @@ def decode_args(args, encoding=None):
         for arg in args
     ]
 
+def can_start(entries):
+    starts_and_stops = [e for e in entries if (e['type'] == 'start') | (e['type'] == 'end')]
+    return starts_and_stops % 2 == 0
+
+def can_stop(entries):
+    starts_and_stops = [e for e in entries if (e['type'] == 'start') | (e['type'] == 'end')]
+    return starts_and_stops % 2 != 0
+
+def can_change(entries):
+    return can_stop(entries)
+
 def start(args):
     now = datetime.datetime.now()
     entry = Query()
     results = db.search(entry.day == str(now.date()))
     if len(results) > 0:
         result = results[0]
-        #check entries already was ended
-        starts_and_stops = [e for e in result['entries'] if (e['type'] == 'start') | (e['type'] == 'end')]
-        if len(starts_and_stops) % 2 == 0:
+        if can_start(result['entries']):
             result['entries'].append({'type':'start','time': str(now.time())})
             db.update(result)
         else:
@@ -46,9 +55,7 @@ def stop(args):
     results = db.search(entry.day == str(now.date()))
     if len(results) > 0:
         result = results[0]
-        #check entries already was ended
-        starts_and_stops = [e for e in result['entries'] if (e['type'] == 'start') | (e['type'] == 'end')]
-        if len(starts_and_stops) % 2 != 0:
+        if can_stop(result['entries']):
             result['entries'].append({'type':'end','time': str(now.time())})
             db.update(result)
             return run("stopped")
@@ -62,9 +69,7 @@ def project(args):
     results = db.search(entry.day == str(now.date()))
     if len(results) > 0:
         result = results[0]
-        #check entries already was ended
-        starts_and_stops = [e for e in result['entries'] if (e['type'] == 'start') | (e['type'] == 'end')]
-        if len(starts_and_stops) % 2 != 0:
+        if can_change(result['entries']):
             result['entries'].append({'type':'project','time': str(now.time()), 'project': args[0]})
             db.update(result)
             return good("Project : " + args[0])
@@ -78,9 +83,7 @@ def task(args):
     results = db.search(entry.day == str(now.date()))
     if len(results) > 0:
         result = results[0]
-        #check entries already was ended
-        starts_and_stops = [e for e in result['entries'] if (e['type'] == 'start') | (e['type'] == 'end')]
-        if len(starts_and_stops) % 2 != 0:
+        if can_change(result['entries']):
             result['entries'].append({'type':'task','time': str(now.time()), 'task': args[0]})
             db.update(result)
             return good("Task : " + args[0])
@@ -99,29 +102,21 @@ def report(args):
         if "-m" in args:
             target_date = "^"+datetime.datetime.strptime(args[1], "%m.%Y").strftime("%Y-%m")+"*"
         elif "-w" in args:
-            results = db.search(entry.day.test(day_is_calendar_week, args[1]))
-            if len(results) > 0:
-                return pp.pformat(list(result for result in results))
-            else:
-                return bad("no entry found")
+            return print_results(db.search(entry.day.test(day_is_calendar_week, args[1])))
         else:
             target_date = datetime.datetime.strptime(args[0], "%d.%m.%Y").strftime("%Y-%m-%d")
     else:
         target_date = now.date()
 
-    results = db.search(entry.day.matches(str(target_date)))
+    return print_results(db.search(entry.day.matches(str(target_date))))
+
+def print_results(results):
     if len(results) > 0:
         return pp.pformat(list(result for result in results))
     else:
         return bad("no entry found")
 
 def main(args=sys.argv[1:]):
-    """
-    The main function.
-    Pre-process args, handle some special types of invocations,
-    and run the main program with error handling.
-    Return exit status code.
-    """
     args = decode_args(args)
 
     include_debug_info = '--debug' in args
