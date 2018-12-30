@@ -25,10 +25,16 @@ def decode_args(args, encoding=None):
 def start():
     now = datetime.datetime.now()
     entry = Query()
-    result = db.search(entry.day == str(now.date()))
-    if len(result) > 0:
-        result[0]['entries'].append({'type':'start','time': str(now.time())})
-        db.insert(result[0])
+    results = db.search(entry.day == str(now.date()))
+    if len(results) > 0:
+        result = results[0]
+        #check entries already was ended
+        starts_and_stops = [e for e in result['entries'] if (e['type'] == 'start') | (e['type'] == 'end')]
+        if len(starts_and_stops) % 2 == 0:
+            result['entries'].append({'type':'start','time': str(now.time())})
+            db.update(result)
+        else:
+            return bad("unable to start")
     else:
         db.insert({'day':str(now.date()), 'entries':[{'type':'start','time': str(now.time())}]})
     return run("started!")
@@ -36,11 +42,16 @@ def start():
 def stop():
     now = datetime.datetime.now()
     entry = Query()
-    result = db.search(entry.day == str(now.date()))
-    if len(result) > 0:
-        result[0]['entries'].append({'type':'end','time': str(now.time())})
-        db.insert(result[0])
-        return info("stopped")
+    results = db.search(entry.day == str(now.date()))
+    if len(results) > 0:
+        result = results[0]
+        #check entries already was ended
+        starts_and_stops = [e for e in result['entries'] if (e['type'] == 'start') | (e['type'] == 'end')]
+        if len(starts_and_stops) % 2 != 0:
+            result['entries'].append({'type':'end','time': str(now.time())})
+            db.update(result)
+            return run("stopped")
+        return bad("unable to stop")
     else:
         return bad("no daily entry found")
 
