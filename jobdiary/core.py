@@ -102,15 +102,15 @@ def report(args):
         if "-m" in args:
             target_date = "^"+datetime.datetime.strptime(args[1], "%m.%Y").strftime("%Y-%m")+"*"
         elif "-w" in args:
-            return print_results(db.search(entry.day.test(day_is_calendar_week, args[1])))
+            return format_results(db.search(entry.day.test(day_is_calendar_week, args[1])))
         else:
             target_date = datetime.datetime.strptime(args[0], "%d.%m.%Y").strftime("%Y-%m-%d")
     else:
         target_date = now.date()
 
-    return print_results(db.search(entry.day.matches(str(target_date))))
+    return format_results(db.search(entry.day.matches(str(target_date))))
 
-def print_results(results):
+def format_results(results):
     if len(results) > 0:
         return pp.pformat(list(result for result in results))
     else:
