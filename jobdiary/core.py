@@ -137,6 +137,6 @@ def main(args=sys.argv[1:]):
         "report": report
     }
 
-    func = commands.get(args[0], lambda: "Invalid command")
+    func = commands.get(args[0], lambda x : "Invalid command")
     print(func(args[1:]))
     return
