@@ -22,7 +22,7 @@ def decode_args(args, encoding=None):
         for arg in args
     ]
 
-def start():
+def start(args):
     now = datetime.datetime.now()
     entry = Query()
     results = db.search(entry.day == str(now.date()))
@@ -39,7 +39,7 @@ def start():
         db.insert({'day':str(now.date()), 'entries':[{'type':'start','time': str(now.time())}]})
     return run("started!")
 
-def stop():
+def stop(args):
     now = datetime.datetime.now()
     entry = Query()
     results = db.search(entry.day == str(now.date()))
@@ -78,5 +78,5 @@ def main(args=sys.argv[1:]):
     }
 
     func = commands.get(args[0], lambda: "Invalid command")
-    print(func())
+    print(func(args[1:]))
     return
