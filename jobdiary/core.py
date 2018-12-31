@@ -1,11 +1,9 @@
-import sys
-from pathlib import Path
-from tinydb import TinyDB, Query
-from huepy import bad, run, good, orange
 import datetime
+from pathlib import Path
 import pprint
-
-
+import sys
+from tinydb import Query, TinyDB
+from huepy import *
 from jobdiary.texts import usage
 from jobdiary import __version__
 
