@@ -14,7 +14,6 @@ before_install:
   - "sudo apt-get update -qq"
 
 install:
-  - "pip install tinydb huepy"
   - "pip install tox"
 
 script:
