@@ -30,6 +30,7 @@ Thanks
 ========
 
 This project depends on TinyDB_ and Huepy_.
+
 .. _TinyDB: https://github.com/msiemens/tinydb
 .. _Huepy: https://github.com/s0md3v/hue
 
