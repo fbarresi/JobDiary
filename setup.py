@@ -10,7 +10,7 @@ def get_version(filename):
 
 
 def readme():
-    with open('README.md') as f:
+    with open('README.rst') as f:
         return f.read()
 
 
@@ -28,4 +28,22 @@ setup(name='jobdiary',
         'setuptools',
         'tinydb',
         'huepy'],
+      entry_points={
+        'console_scripts': [
+            'diary = jobdiary.__main__:main',
+        ],
+        },
+      classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: MIT License',
+        'Topic :: Terminals',
+        'Topic :: Text Processing',
+        'Topic :: Utilities'
+        ]
       )
