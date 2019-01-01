@@ -76,6 +76,8 @@ def stop(args):
 
 
 def project(args):
+    if len(args) > 0:
+            return bad("Error: empty project")
     now = datetime.datetime.now()
     entry = Query()
     results = db.search(entry.day == str(now.date()))
@@ -93,6 +95,8 @@ def project(args):
 
 
 def task(args):
+    if len(args) > 0:
+            return bad("Error: empty task")
     now = datetime.datetime.now()
     entry = Query()
     results = db.search(entry.day == str(now.date()))
