@@ -30,7 +30,7 @@ setup(name='jobdiary',
         'huepy'],
       entry_points={
         'console_scripts': [
-            'diary = jobdiary.__main__:main',
+            'jd = jobdiary.__main__:main',
         ],
         },
       classifiers=[

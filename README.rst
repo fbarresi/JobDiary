@@ -24,7 +24,7 @@ Usage
 
 Just type in the console::
 
-    diary --help
+    jd --help
 
 Thanks
 ========

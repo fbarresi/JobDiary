@@ -1,6 +1,6 @@
 def usage():
     text = """
-    diary <command> [options]
+    jd <command> [options]
 
 Command list:
 start : start a diary page
