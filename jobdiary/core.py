@@ -76,7 +76,7 @@ def stop(args):
 
 
 def project(args):
-    if len(args) = 0:
+    if len(args) == 0:
             return bad("Error: empty project")
     now = datetime.datetime.now()
     entry = Query()
@@ -95,7 +95,7 @@ def project(args):
 
 
 def task(args):
-    if len(args) = 0:
+    if len(args) == 0:
             return bad("Error: empty task")
     now = datetime.datetime.now()
     entry = Query()
