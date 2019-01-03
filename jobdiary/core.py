@@ -87,6 +87,10 @@ def project(args):
             result['entries'].append({'type': 'project',
                                       'time': str(now.time()),
                                       'project': args[0]})
+            if len(args) > 1:
+                result['entries'].append({'type': 'task',
+                                          'time': str(now.time()),
+                                          'task': args[1]})
             db.update(result)
             return good("Project : " + args[0])
         return bad("unable add entry")
