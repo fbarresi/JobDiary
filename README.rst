@@ -1,8 +1,10 @@
 *************************
 JobDiary
 *************************
-
 a funny and easy to use job diary to trace your activities and export reports
+
+.. image:: https://travis-ci.org/fbarresi/JobDiary.svg?branch=master
+    :target: https://travis-ci.org/fbarresi/JobDiary
 
 Installation
 ========
